@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MQ-Transfer</title>
+<style type="text/css">
+	.btn-operation>.btn, .btn-operation>.btn-group {
+	    margin: 0.25rem 0.125rem;
+	}
+	.show-condition {
+		display: none;
+	}
+</style>
+</head>
+<body>
+	<header class="d-flex justify-content-end btn-operation">
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">新增</button>
+	</header>
+	<table class="table table-bordered table-hover align-middle" id="tableContainer">
+	  <thead class="table-light">
+	    <tr>
+	      <th scope="col">#</th>
+	      <th scope="col">名称</th>
+	      <th scope="col">编码</th>
+	      <th scope="col">类型</th>
+	      <th scope="col">版本号</th>
+	      <th scope="col">客户端版本号</th>
+	      <th scope="col">zk/nameserver地址</th>
+	      <th scope="col">主机列表</th>
+	      <th scope="col">状态</th>
+	      <th scope="col">操作</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  </tbody>
+	</table>
+	<!-- Modal -->
+	<div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="addModalLabel">新增集群</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      <form class="g-3" id="addForm">
+	     	<div class="mb-3 row">
+			    <label for="name" class="col-sm-3 col-form-label">名称</label>
+			    <div class="col-sm-9">
+			      <input type="text" class="form-control" id="name" name="name" placeholder="请输入集群名称">
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="code" class="col-sm-3 col-form-label">编码</label>
+			    <div class="col-sm-9">
+			      <input type="text" class="form-control" id="code" name="code" placeholder="请输入集群编码，集群的唯一标识">
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="type" class="col-sm-3 col-form-label">类型</label>
+			    <div class="col-sm-9">
+			      <select class="form-select" id="type" name="type">
+					  <option value="" selected>选择类型</option>
+					  <option value="Kafka">Kafka</option>
+					  <option value="RocketMQ">RocketMQ</option>
+					</select>
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="version" class="col-sm-3 col-form-label">版本号</label>
+			    <div class="col-sm-9">
+			      <select class="form-select" id="version" name="version">
+					  <option selected>选择版本号</option>
+					</select>
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="inputPassword" class="col-sm-3 col-form-label">客户端版本号</label>
+			    <div class="col-sm-9" id="clientVersionContainer">
+					<div class="form-check form-check-inline">
+					  <input class="form-check-input" type="checkbox" id="inlineCheckbox" name="clientVersion" value="" disabled>
+					  <label class="form-check-label" for="inlineCheckbox">请先选择类型</label>
+					</div>
+			    </div>
+			  </div>
+			  <div class="mb-3 row show-condition type-Kafka">
+			    <label for="zkUrl" class="col-sm-3 col-form-label">Zookeeper地址</label>
+			    <div class="col-sm-9">
+			      <input type="text" class="form-control" id="zkUrl" name="zkUrl" placeholder="多个地址使用逗号分隔">
+			    </div>
+			  </div>
+			  <div class="mb-3 row show-condition type-RocketMQ">
+			    <label for="nameSvrAddr" class="col-sm-3 col-form-label">nameServer地址</label>
+			    <div class="col-sm-9">
+			      <input type="text" class="form-control" id="nameSvrAddr" name="nameSvrAddr" placeholder="多个地址使用逗号分隔">
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="brokerList" class="col-sm-3 col-form-label">主机列表</label>
+			    <div class="col-sm-9">
+			      <input type="text" class="form-control" id="brokerList" name="brokerList" placeholder="多个主机使用逗号分隔">
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="status" class="col-sm-3 col-form-label">状态</label>
+			    <div class="col-sm-9" id="statusContainer">
+					<div class="form-check form-check-inline">
+					  <input class="form-check-input" type="radio" id="statusCheckbox" name="status" value="1" checked="checked">
+					  <label class="form-check-label" for="statusCheckbox">启用</label>
+					</div>
+					<div class="form-check form-check-inline">
+					  <input class="form-check-input" type="radio" id="statusCheckbox2" name="status" value="0">
+					  <label class="form-check-label" for="statusCheckbox2">禁用</label>
+					</div>
+			    </div>
+			  </div>
+			  </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+	        <button type="button" class="btn btn-primary" id="btnSave">保存</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+    <script type="text/javascript">
+    //$("select[name=test] option").eq(0).prop("selected","selected").trigger("change");
+    $(function(){
+    	var mqVersionMap = {
+    			"Kafka" : ["0.8.2","0.8.2.1","1.0.0","2.3.0","3.2.0"],
+    			"RocketMQ" : ["4.2","4.9","5.0"]
+    	};
+    	$("#type").off("change");
+    	$("#type").on("change", function(){
+    		var type = $("#type").val();
+        	var versions = mqVersionMap[type];
+        	if (typeof versions == "undefined") {
+        		versions = []
+        	}
+        	$("#version").empty();
+        	$("#version").append("<option value='' selected>选择版本号</option>");
+        	$.each(versions, function(index, item) {
+        		$("#version").append("<option value='" + item + "'>" + item + "</option>")
+        	})
+        	$("#clientVersionContainer").empty();
+        	if (versions.length == 0) {
+        		$("#clientVersionContainer").append('<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox" name="clientVersion" value="" disabled><label class="form-check-label" for="inlineCheckbox">请先选择类型</label></div>')
+        	}
+        	$.each(versions, function(index, item) {
+        		$("#clientVersionContainer").append('<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox'+index+'" name="clientVersion" value="'+item+'"><label class="form-check-label" for="inlineCheckbox'+index+'">'+item+'</label></div>')
+        	})
+        	$('.show-condition').css("display", "none");
+        	$('.show-condition.type-' + type).css("display", "flex");
+        })
+        $("#btnSave").off("click");
+        $("#btnSave").on("click", function(){
+        	var form = $("#addForm");
+        	var formData = form.serializeArray();
+        	var jsonData = {};
+        	$(formData).each(function(index, item){
+        		if (jsonData[item.name]) {
+        			jsonData[item.name] = jsonData[item.name] + "," + item.value;
+        		} else {
+        			jsonData[item.name] = item.value;
+        		}
+        		
+        	})
+        	ajaxRequest("../cluster/save", jsonData, function(data){
+        		$('#addModal').modal('hide');
+		     	loadList();
+        	});
+        })
+        $(document).off("click");
+        $(document).on('click', '.btn-oper-edit', function() {
+        	var that = $(this);
+        	var tr = that.parents("tr");
+		  // 处理点击事件
+		  var item = tr.data("item");
+		  formFillValue($("#addForm"), item);
+		  $('#addModal').modal('show');
+		});
+        $(document).on('click', '.btn-oper-del', function() {
+        	var that = $(this);
+        	var tr = that.parents("tr");
+		  // 处理点击事件
+		  var item = tr.data("item");
+		  BoostrapExpand.confirm({ message: "确定要删除该记录吗" }).on(function (e) {
+			   if (!e) {
+			       return;
+			   }
+			   //代码段
+			   ajaxRequest("../cluster/delete", item, function(data){
+			     	loadList();
+	        	});
+			});
+		});
+        loadList();
+    })
+    
+    function loadList() {
+    	var jsonData = {};
+    	ajaxRequest("../cluster/list", jsonData, function(data){
+    		var target = $("#tableContainer").find("tbody");
+    		target.empty();
+    		$(data).each(function(index, item){
+    			var tr = $("<tr>");
+    			tr.data("item", item);
+    			tr.append('<th scope="row">' + (index + 1) + '</th>');
+    			tr.append('<td>'+ item.name +'</td>');
+    			tr.append('<td>'+ item.code +'</td>');
+    			tr.append('<td>'+ item.type +'</td>');
+    			tr.append('<td>'+ item.version +'</td>');
+    			tr.append('<td>'+ item.clientVersion +'</td>');
+    			tr.append('<td>'+ (item.zkUrl ? item.zkUrl : item.nameSvrAddr) +'</td>');
+    			tr.append('<td>'+ item.brokerList +'</td>');
+    			tr.append('<td>'+ (item.status == 1 ? '<span class="badge bg-primary">启用</span>' : '<span class="badge bg-secondary">停止</span>') +'</td>');
+    			tr.append('<td><div class="btn-oper-group"><button type="button" class="btn btn-outline-primary btn-sm btn-oper-edit">修改</button><button type="button" class="btn btn-outline-dark btn-sm btn-oper-del">删除</button></div></td>');
+    			target.append(tr);
+    		})
+    	})
+    }
+    </script>
+</body>
+</html>

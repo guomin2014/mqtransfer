@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: mq-transfer-biz-manager
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+logging:
+  level:
+    root: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%logger{50}] - %msg%n'

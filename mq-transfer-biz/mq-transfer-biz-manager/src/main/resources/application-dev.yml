@@ -1,0 +1,16 @@
+transfer:
+  cluster:
+    zkUrl: 127.0.0.1:2181
+    autoRebalanceDelayInSeconds: 1
+    autoRebalanceEnable: true
+    autoRebalanceStrategy: AssignPriority
+  module:
+    storage:
+      zkUrl: 127.0.0.1:2181
+      sessionTimeoutMs: 10000
+      connectionTimeoutMs: 5000
+      maxSleepIntervalTimeMs: 1000
+      maxRetries: 5
+      maxSleepMs: 5000
+  data:
+    path: /export/mqtransfer/data

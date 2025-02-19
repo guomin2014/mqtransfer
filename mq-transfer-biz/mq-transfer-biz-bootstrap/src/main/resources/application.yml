@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: mq-transfer-biz-bootstrap
+cluster:
+  mode: cluster         ##cluster,standalone
+#  zkUrl: 127.0.0.1:2181

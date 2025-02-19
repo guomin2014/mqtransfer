@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: mq-transfer-biz-worker
+  profiles:
+    active: dev

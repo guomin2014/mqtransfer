@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MQ-Transfer</title>
+<style type="text/css">
+	.btn-operation>.btn, .btn-operation>.btn-group {
+	    margin: 0.25rem 0.125rem;
+	}
+	.show-condition {
+		display: none;
+	}
+</style>
+</head>
+<body>
+	<header class="d-flex justify-content-end btn-operation">
+		<button type="button" class="btn btn-primary" id="btnAdd">新增</button>
+	</header>
+	<table class="table table-bordered table-hover align-middle" id="tableContainer">
+	  <thead class="table-light">
+	    <tr>
+	      <th scope="col">#</th>
+	      <th scope="col">名称</th>
+	      <th scope="col">编码</th>
+	      <th scope="col">源集群</th>
+	      <th scope="col">源主题</th>
+	      <th scope="col">目标集群</th>
+	      <th scope="col">目标主题</th>
+	      <th scope="col">状态</th>
+	      <th scope="col">操作</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  </tbody>
+	</table>
+	<!-- Modal -->
+	<div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="addModalLabel">新增任务</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      <form class="g-3" id="addForm">
+	     	<div class="mb-3 row">
+			    <label for="name" class="col-sm-2 col-form-label">名称</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="name" name="name" placeholder="请输入任务名称">
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="code" class="col-sm-2 col-form-label">编码</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="code" name="code" placeholder="请输入任务编码，任务的唯一标识">
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="fromClusterCode" class="col-sm-2 col-form-label">源集群</label>
+			    <div class="col-sm-10">
+			      <select class="form-select" id="fromClusterCode" name="fromClusterCode">
+					  <option value="" selected>选择源集群</option>
+					</select>
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="fromTopic" class="col-sm-2 col-form-label">源主题</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="fromTopic" name="fromTopic" placeholder="请输入源主题">
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="fromConfig" class="col-sm-2 col-form-label">源配置</label>
+			    <div class="col-sm-10">
+			      <!-- <input type="text" class="form-control" id="fromConfig" name="fromConfig" placeholder="请输入源消费配置"> -->
+			      <a class="btn btn-link" data-bs-toggle="collapse" href="#fromConfig" role="button" aria-expanded="false" aria-controls="collapseExample">
+				    显示/隐藏
+				  </a>
+			      <div class="collapse" id="fromConfig">
+					  <div class="card card-body">
+					    <div class="mb-3 row">
+						    <label for="fromTopic" class="col-sm-3 col-form-label">共享客户端</label>
+						    <div class="col-sm-9">
+						      <div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" id="clientShareCheckbox" name="fromConfig.clientShare" value="true" checked="checked">
+								  <label class="form-check-label" for="clientShareCheckbox">启用</label>
+								</div>
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" id="clientShareCheckbox2" name="fromConfig.clientShare" value="false">
+								  <label class="form-check-label" for="clientShareCheckbox2">禁用</label>
+								</div>
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="groupId" class="col-sm-3 col-form-label">消费组</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="groupId" name="fromConfig.groupId" placeholder="请输入源消费组名称">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="maxSingleSize" class="col-sm-3 col-form-label">单条消息大小</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="maxSingleSize" name="fromConfig.maxSingleSize" placeholder="请输入单条消息最大大小，单位：byte">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="maxBatchRecords" class="col-sm-3 col-form-label">批量消费条数</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="maxBatchRecords" name="fromConfig.maxBatchRecords" placeholder="请输入一次消费最大消息条数">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="maxBatchSize" class="col-sm-3 col-form-label">批量消费大小</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="maxBatchSize" name="fromConfig.maxBatchSize" placeholder="请输入一次消费最大消息大小，单位：byte">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="maxBatchWaitMs" class="col-sm-3 col-form-label">消费等待时长</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="maxBatchWaitMs" name="fromConfig.maxBatchWaitMs" placeholder="请输入一次消费最大等待时长，单位：毫秒">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="clientConfig" class="col-sm-3 col-form-label">原生消费配置</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="clientConfig" name="fromConfig.clientConfig" placeholder="请输入消费端的原生配置，格式：JSON">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="filterConfigs" class="col-sm-3 col-form-label">消费过滤配置</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="filterConfigs" name="fromConfig.filterConfigs" placeholder="请输入消费过滤配置，格式：JSON">
+						    </div>
+						  </div>
+					  </div>
+					</div>
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="toClusterCode" class="col-sm-2 col-form-label">目标集群</label>
+			    <div class="col-sm-10">
+			      <select class="form-select" id="toClusterCode" name="toClusterCode">
+					  <option value="" selected>选择目标集群</option>
+					</select>
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="toTopic" class="col-sm-2 col-form-label">目标主题</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="toTopic" name="toTopic" placeholder="请输入目标主题">
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="toConfig" class="col-sm-2 col-form-label">目标配置</label>
+			    <div class="col-sm-10">
+			      <!-- <input type="text" class="form-control" id="toConfig" name="toConfig" placeholder="请输入目标生产配置"> -->
+			      <a class="btn btn-link" data-bs-toggle="collapse" href="#toConfig" role="button" aria-expanded="false" aria-controls="collapseExample">
+				    显示/隐藏
+				  </a>
+			      <div class="collapse" id="toConfig">
+					  <div class="card card-body">
+					    <div class="mb-3 row">
+						    <label for="clientShare" class="col-sm-3 col-form-label">共享客户端</label>
+						    <div class="col-sm-9">
+						      <div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" id="clientShareCheckbox3" name="toConfig.clientShare" value="true" checked="checked">
+								  <label class="form-check-label" for="clientShareCheckbox3">启用</label>
+								</div>
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" id="clientShareCheckbox4" name="toConfig.clientShare" value="false">
+								  <label class="form-check-label" for="clientShareCheckbox4">禁用</label>
+								</div>
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="maxSingleSize" class="col-sm-3 col-form-label">单条消息大小</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="maxSingleSize" name="toConfig.maxSingleSize" placeholder="请输入单条消息最大大小，单位：byte">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="maxBatchRecords" class="col-sm-3 col-form-label">批量生产条数</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="maxBatchRecords" name="toConfig.maxBatchRecords" placeholder="请输入一次发送最大消息条数">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="maxBatchSize" class="col-sm-3 col-form-label">批量生产大小</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="maxBatchSize" name="toConfig.maxBatchSize" placeholder="请输入一次发送最大消息大小，单位：byte">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="sendTimeoutMs" class="col-sm-3 col-form-label">发送超时时长</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="sendTimeoutMs" name="toConfig.sendTimeoutMs" placeholder="请输入一次发送消息超时时长，单位：毫秒">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="clientConfig" class="col-sm-3 col-form-label">原生生产配置</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="clientConfig" name="toConfig.clientConfig" placeholder="请输入生产端的原生配置，格式：JSON">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="convertConfigs" class="col-sm-3 col-form-label">生产转换配置</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="convertConfigs" name="toConfig.convertConfigs" placeholder="请输入生产转换配置，格式：JSON">
+						    </div>
+						  </div>
+					  </div>
+					</div>
+			    </div>
+			  </div>
+			  <div class="mb-3 row">
+			    <label for="transferConfig" class="col-sm-2 col-form-label">转发配置</label>
+			    <div class="col-sm-10">
+			      <a class="btn btn-link" data-bs-toggle="collapse" href="#transferConfig" role="button" aria-expanded="false" aria-controls="collapseExample">
+				    显示/隐藏
+				  </a>
+			      <div class="collapse" id="transferConfig">
+					  <div class="card card-body">
+						  <div class="mb-3 row">
+						    <label for="partitionMatchStrategy" class="col-sm-3 col-form-label">分区匹配策略</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="partitionMatchStrategy" name="transferConfig.partitionMatchStrategy" placeholder="AVG_BY_CIRCLE:平均分配，CONFIG：配置，PARTITION_ROOM：分区匹配，HASH：hash值，RANDOM：随机">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="partitionMatchConfig" class="col-sm-3 col-form-label">分区匹配方式</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="partitionMatchConfig" name="transferConfig.partitionMatchConfig" placeholder="如：1:1,2:2,3:3,4:4">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="partitionWeight" class="col-sm-3 col-form-label">分区权重</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="partitionWeight" name="transferConfig.partitionWeight" placeholder="请输入分区权重值">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="cacheQueueMemoryMaxRatio" class="col-sm-3 col-form-label">缓存内存占比</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="cacheQueueMemoryMaxRatio" name="transferConfig.cacheQueueMemoryMaxRatio" placeholder="请输入缓存数据在内存中的占比,值为1-100">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="maxCacheRecords" class="col-sm-3 col-form-label">单分区缓存条数</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="maxCacheRecords" name="transferConfig.maxCacheRecords" placeholder="请输入单个分区最大缓存条数">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="fromPartitions" class="col-sm-3 col-form-label">指定转发分区</label>
+						    <div class="col-sm-9">
+						      <input type="text" class="form-control" id="fromPartitions" name="transferConfig.fromPartitions" placeholder="请输入需要转发的分区，格式：JSON">
+						    </div>
+						  </div>
+					  </div>
+					</div>
+			    </div>
+			  </div>
+			  </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+	        <button type="button" class="btn btn-primary" id="btnSave">保存</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div class="modal fade" id="monitorModal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-fullscreen">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="monitorModalLabel">任务监控<span class="modal-title-sub"></span></h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      	<table class="table table-bordered" id="monitorTable">
+	      		<tbody>
+	      			
+	      		</tbody>
+	      	</table>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+	        <button type="button" class="btn btn-primary" id="btnRefresh">刷新</button>
+	      </div>
+	     </div>
+	  </div>
+	</div>
+    <script type="text/javascript">
+    $(function(){
+    	$("#btnAdd").off("click");
+    	$("#btnAdd").on("click", function(){
+    		var form = $("#addForm");
+    		//初始化值
+    		initForm(form);
+    		//禁止修改字段
+		  	disabledForm(form, false);
+    		$('#addModal').modal('show');
+    	})
+    	$("#btnSave").off("click");
+        $("#btnSave").on("click", function(){
+        	var form = $("#addForm");
+        	var jsonData = formSerializeArray(form);
+        	ajaxRequest("../task/save", jsonData, function(data){
+        		$('#addModal').modal('hide');
+		     	loadList();
+        	});
+
+        })
+    	$("#btnRefresh").off("click");
+        $("#btnRefresh").on("click", function(){
+        	var that = $(this);
+        	var item = $("#monitorModal").data("item");
+        	ajaxRequest("../task/monitor", item, function(data){
+	  			handlerMonitorData(item, data);
+        	});
+        })
+        $(document).off("click");
+        $(document).on('click', '.btn-oper', function() {
+        	var that = $(this);
+        	var name = that.attr("name");
+        	var tr = that.parents("tr");
+		  	var item = tr.data("item");
+		  	var form = $("#addForm");
+		  	if (name == "edit") {
+		  		//初始化值
+				initForm(form);
+			  	//填充值
+				formFillValue(form, item);
+			  	//禁止修改字段
+			  	disabledForm(form, true);
+			  	$('#addModal').modal('show');
+		  	} else if (name == "del") {
+		  		BoostrapExpand.confirm({ message: "确定要删除【" + item.name + "(" + item.code + ")】记录吗?" }).on(function (e) {
+				   if (!e) { return; }
+				   ajaxRequest("../task/delete", item, function(data){
+				     	loadList();
+		        	});
+				});
+		  	} else if (name == "start") {
+		  		BoostrapExpand.confirm({ message: "确定要启动【" + item.name + "(" + item.code + ")】记录吗?" }).on(function (e) {
+				   if (!e) { return; }
+				   item.status=1;
+				   ajaxRequest("../task/start", item, function(data){
+				     	tr.data("item", item);
+				     	tr.find("td:eq(6)").html('<span class="badge bg-primary">启用</span>');
+				     	tr.find('.btn-oper[name="edit"], .btn-oper[name="del"]').prop("disabled", "disabled");
+				     	tr.find('.btn-oper[name="start"]').attr("name", "stop").removeClass("btn-outline-success").addClass("btn-outline-warning").text("停止");
+		        	});
+				});
+		  	} else if (name == "stop") {
+		  		BoostrapExpand.confirm({ message: "确定要停止【" + item.name + "(" + item.code + ")】记录吗?" }).on(function (e) {
+				   if (!e) { return; }
+				   item.status=0;
+				   ajaxRequest("../task/stop", item, function(data){
+					   tr.data("item", item);
+					   tr.find("td:eq(6)").html('<span class="badge bg-secondary">停止</span>');
+				       tr.find('.btn-oper[name="edit"], .btn-oper[name="del"]').prop("disabled", "");
+				       tr.find('.btn-oper[name="stop"]').attr("name", "start").removeClass("btn-outline-warning").addClass("btn-outline-success").text("启动");
+		        	});
+				});
+		  	} else if (name == "monitor") {
+		  		$('#monitorModal').data("item", item);
+		  		ajaxRequest("../task/monitor", item, function(data){
+		  			handlerMonitorData(item, data);
+		  			$('#monitorModal').modal('show');
+	        	});
+		  	}
+		});
+    	loadClusterList();
+        loadList();
+    })
+    
+    function initForm(form) {
+    	form[0].reset();
+    	//初始化值
+		$("#fromClusterCode").empty();
+       	$("#fromClusterCode").append("<option value='' selected>选择源集群</option>");
+       	$("#toClusterCode").empty();
+       	$("#toClusterCode").append("<option value='' selected>选择目标集群</option>");
+       	$.each(enableClusterList, function(index, item) {
+       		$("#fromClusterCode").append("<option value='" + item.code + "'>" + item.name + "(" + item.code + ")" + "</option>")
+       		$("#toClusterCode").append("<option value='" + item.code + "'>" + item.name + "(" + item.code + ")" + "</option>")
+       	});
+       	$("#fromConfig").removeClass("show");
+       	$("#toConfig").removeClass("show");
+       	$("#transferConfig").removeClass("show");
+    }
+    
+    function disabledForm(form, disabled) {
+    	if (disabled) {
+    		form.find("[name='code']").prop("readonly", "readonly").prop("disabled", "disabled");
+		  	form.find("[name='fromClusterCode']").prop("readonly", "readonly").prop("disabled", "disabled");
+		  	form.find("[name='fromTopic']").prop("readonly", "readonly").prop("disabled", "disabled");
+		  	form.find("[name='toClusterCode']").prop("readonly", "readonly").prop("disabled", "disabled");
+		  	form.find("[name='toTopic']").prop("readonly", "readonly").prop("disabled", "disabled");
+    	} else {
+    		form.find("[name='code']").prop("readonly", "").prop("disabled", "");
+		  	form.find("[name='fromClusterCode']").prop("readonly", "").prop("disabled", "");
+		  	form.find("[name='fromTopic']").prop("readonly", "").prop("disabled", "");
+		  	form.find("[name='toClusterCode']").prop("readonly", "").prop("disabled", "");
+		  	form.find("[name='toTopic']").prop("readonly", "").prop("disabled", "");
+    	}
+    }
+    
+    var allClusterMap = {};
+    var allClusterList = [];
+    var enableClusterList = [];
+    
+    function loadClusterList() {
+    	var jsonData = {};
+    	ajaxRequest("../cluster/list", jsonData, function(data){
+    		$(data).each(function(index, item){
+    			allClusterMap[item.code] = item;
+    			allClusterList.push(item);
+    			enableClusterList.push(item);
+    		});
+    	});
+    }
+    
+    function loadList() {
+    	var jsonData = {};
+    	ajaxRequest("../task/list", jsonData, function(data){
+    		var target = $("#tableContainer").find("tbody");
+    		target.empty();
+    		$(data).each(function(index, item){
+    			var fromCluster = allClusterMap[item.fromClusterCode];
+    			var toCluster = allClusterMap[item.toClusterCode];
+    			var tr = $("<tr>");
+    			tr.data("item", item);
+    			tr.append('<th scope="row">' + (index + 1) + '</th>');
+    			tr.append('<td>'+ item.name +'</td>');
+    			tr.append('<td>'+ item.code +'</td>');
+    			tr.append('<td>'+ (fromCluster ? fromCluster.name + "(" + fromCluster.code + ")" : item.fromClusterCode) +'</td>');
+    			tr.append('<td>'+ item.fromTopic +'</td>');
+    			tr.append('<td>'+ (toCluster ? toCluster.name + "(" + toCluster.code + ")" : item.toClusterCode) +'</td>');
+    			tr.append('<td>'+ item.toTopic +'</td>');
+    			tr.append('<td>'+ (item.status == 1 ? '<span class="badge bg-primary">启用</span>' : '<span class="badge bg-secondary">停止</span>') +'</td>');
+    			var operDiv = '<div class="btn-oper-group">';
+    			operDiv += '<button type="button" class="btn btn-outline-primary btn-sm btn-oper" name="edit" ' + (item.status == 1 ? "disabled":"") + '>修改</button>';
+    			operDiv += '<button type="button" class="btn btn-outline-dark btn-sm btn-oper" name="del"  ' + (item.status == 1 ? "disabled":"") + '>删除</button>';
+    			operDiv += item.status == 1 ? '<button type="button" class="btn btn-outline-warning btn-sm btn-oper" name="stop">停止</button>' : '<button type="button" class="btn btn-outline-success btn-sm btn-oper" name="start">启动</button>';
+    			operDiv += '<button type="button" class="btn btn-outline-primary btn-sm btn-oper" name="monitor">监控</button>';
+    			operDiv += '</div>';
+    			tr.append('<td>' + operDiv + '</td>');
+    			target.append(tr);
+    		})
+    	})
+    }
+    function handlerMonitorData(item, data) {
+    	var fromCluster = allClusterMap[item.fromClusterCode];
+		var toCluster = allClusterMap[item.toClusterCode];
+		var fromClusterName = fromCluster ? fromCluster.name + "(" + fromCluster.code + ")" : item.fromClusterCode;
+		var toClusterName = toCluster ? toCluster.name + "(" + toCluster.code + ")" : item.toClusterCode;
+			var titleDiv = $('#monitorModal').find('.modal-title-sub');
+			titleDiv.html('【' + item.name + '(' + item.code + ')' + '】[' + fromClusterName + '](' + item.fromTopic + ') => [' + toClusterName + '](' + item.toTopic + ')');
+			var monitorTableBody = $('#monitorModal').find("#monitorTable tbody");
+			monitorTableBody.empty();
+			monitorTableBody.append('<tr><td class="col-2">总可用内存</td><td class="col-4">'+ formatByte(data.maxAvailableMemory) +'</td><td class="col-2">总已用内存</td><td class="col-4">'+ formatByte(data.totalUsedMemory) +'</td></tr>');
+			monitorTableBody.append('<tr><td>总消费记录数</td><td>'+ data.totalConsumerCount +'</td><td>总消费延迟数</td><td>'+ data.totalConsumerLag +'</td></tr>');
+			monitorTableBody.append('<tr><td>总转发记录数</td><td>'+ data.totalProducerCount +'</td><td>总转发延迟数</td><td>'+ data.totalProducerLag +'</td></tr>');
+			monitorTableBody.append('<tr><td>总过滤记录数</td><td>'+ data.totalFilterCount +'</td><td>总缓存记录数</td><td>'+ data.totalCacheQueueCount +'</td></tr>');
+			monitorTableBody.append('<tr><td colspan="4">分区信息</td></tr>');
+			var partitionTr = $("<tr></tr>");
+			var partitionTd = $('<td colspan="4"></td>');
+			var partitionTable = $('<table class="table table-bordered"></table>');
+			var partitionTableHead = $('<thead></thead>');
+			partitionTableHead.append('<tr><th>源分区</th><th>目标分区</th><th>最小位置点</th><th>最大位置点</th><th>消费位置点</th><th>转发位置点</th><th>消费Lag</th><th>转发Lag</th><th>最后消费时间</th><th>最后转发时间</th><th>缓存队列数</th></tr>')
+			partitionTable.append(partitionTableHead);
+			var partitionTableBody = $('<tbody></tbody>');
+			if (data.partitionStatList) {
+				$.each(data.partitionStatList, function(index, partition){
+					var ptr = $("<tr></tr>");
+					ptr.append('<td>' + partition.sourcePartition + '</td>');
+					ptr.append('<td>' + partition.targetPartition + '</td>');
+					ptr.append('<td>' + partition.minOffset + '</td>');
+					ptr.append('<td>' + partition.maxOffset + '</td>');
+					ptr.append('<td>' + partition.consumerOffset + '</td>');
+					ptr.append('<td>' + partition.commitOffset + '</td>');
+					ptr.append('<td>' + partition.consumerLag + '</td>');
+					ptr.append('<td>' + partition.producerLag + '</td>');
+					ptr.append('<td>' + formatDate(partition.lastConsumerTime) + '</td>');
+					ptr.append('<td>' + formatDate(partition.lastProducerTime) + '</td>');
+					ptr.append('<td>' + partition.cacheQueueSize + '</td>');
+					partitionTableBody.append(ptr);
+				});
+			}
+			partitionTable.append(partitionTableBody);
+			partitionTd.append(partitionTable);
+			partitionTr.append(partitionTd);
+			monitorTableBody.append(partitionTr);
+    }
+    function formatDate(time, format = 'yyyy-MM-dd HH:mm:ss') {
+    	if (typeof time == "undefined" || time == '' || time == null) {
+    		return "-";
+    	}
+    	let date = new Date(time);
+        let year = date.getFullYear();  
+        let month = String(date.getMonth() + 1).padStart(2, '0');  
+        let day = String(date.getDate()).padStart(2, '0');  
+        let hour = String(date.getHours()).padStart(2, '0');  
+        let minute = String(date.getMinutes()).padStart(2, '0');  
+        let second = String(date.getSeconds()).padStart(2, '0');
+        let obj = {  
+            'M+': month, // 月份  
+            'd+': day, // 日  
+            'h+': hour, // 小时  
+            'm+': minute, // 分  
+            's+': second, // 秒  
+            'yyyy': year, // 年份  
+            'MM': month,  
+            'dd': day,  
+            'HH': hour,  
+            'mm': minute,  
+            'ss': second  
+        };  
+      
+        for (let k in obj) {
+            if (new RegExp(`(${k})`).test(format)) {
+                format = format.replace(RegExp.$1, (RegExp.$1.length === 1 || RegExp.$1.length === 4) ? (obj[k]) : (('00' + obj[k]).substr(('' + obj[k]).length)));  
+            }  
+        }  
+      
+        return format;  
+    }  
+    </script>
+</body>
+</html>

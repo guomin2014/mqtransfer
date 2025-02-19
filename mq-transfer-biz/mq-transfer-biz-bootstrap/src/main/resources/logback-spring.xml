@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration  scan="true" scanPeriod="10 seconds">
+	<springProperty scope="context" name="springApplicationName" source="spring.application.name" defaultValue="mq-transfer-container" />
+    <property name="LOG_HOME" value="/export/logs" />
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%logger{50}:%L] - %msg%n" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	　　<pattern>${LOG_PATTERN}</pattern>
+	　　</encoder>
+    </appender>
+    <appender name="fileInfo" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	　　		<pattern>${LOG_PATTERN}</pattern>
+	　　</encoder>
+		<file>${LOG_HOME}/${springApplicationName:-defalut}/info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/${springApplicationName:-defalut}/info.log.%d{yyyyMMdd}</fileNamePattern>
+		</rollingPolicy>
+    </appender>
+    <appender name="fileError" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+    		<level>ERROR</level>
+    	</filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	　　		<pattern>${LOG_PATTERN}</pattern>
+	　　</encoder>
+		<file>${LOG_HOME}/${springApplicationName:-defalut}/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/${springApplicationName:-defalut}/error.log.%d{yyyyMMdd}</fileNamePattern>
+		</rollingPolicy>
+    </appender>
+
+	<root level="INFO">
+　　		<appender-ref ref="CONSOLE" />
+　　		<appender-ref ref="fileInfo" />
+　　		<appender-ref ref="fileError" />
+　　</root>
+
+	<!-- 屏蔽Bean加载日志 -->
+	<logger name="org.springframework.context.support" level="ERROR"></logger>
+	<logger name="org.apache.helix.controller" level="ERROR"></logger>
+	<logger name="org.apache.helix.common" level="ERROR"></logger>
+	<logger name="org.apache.helix" level="ERROR"></logger>
+	<logger name="org.apache.zookeeper" level="ERROR"></logger>
+
+</configuration>
