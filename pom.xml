@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.gm.mqtransfer</groupId>
+    <artifactId>mq-transfer</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+    	<module>mq-transfer-bom</module>
+        <module>mq-transfer-biz/mq-transfer-biz-facade</module>
+        <module>mq-transfer-biz/mq-transfer-biz-bootstrap</module>
+        <module>mq-transfer-biz/mq-transfer-biz-module</module>
+        <module>mq-transfer-biz/mq-transfer-biz-worker</module>
+        <module>mq-transfer-biz/mq-transfer-biz-manager</module>
+        <module>mq-transfer-provider/mq-transfer-provider-facade</module>
+        <module>mq-transfer-provider/mq-transfer-provider-kafka-082</module>
+        <module>mq-transfer-provider/mq-transfer-provider-kafka-230</module>
+        <module>mq-transfer-provider/mq-transfer-provider-rocketmq-420</module>
+    </modules>
+
+    <properties>
+        <project.encoding>UTF-8</project.encoding>
+        <java.version>1.8</java.version>
+        <license.maven.plugin>3.0</license.maven.plugin>
+        <maven.java.formatter.plugin>0.4</maven.java.formatter.plugin>
+        <maven.compiler.plugin>3.1</maven.compiler.plugin>
+        <maven.source.plugin>3.0.0</maven.source.plugin>
+        <maven.javadoc.plugin>3.2.0</maven.javadoc.plugin>
+        <maven.staging.plugin>1.6.7</maven.staging.plugin>
+        <maven.gpg.pluign>1.5</maven.gpg.pluign>
+        <jacoco.maven.plugin>0.8.4</jacoco.maven.plugin>
+    </properties>
+
+    <name>${project.artifactId}</name>
+    <description>A porter of news From one mq to another mq.</description>
+    <!--<url>https://github.com/mqtransfer/mq-transfer</url>-->
+		<!--
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+		-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin}</version>
+                <configuration>
+                    <encoding>${project.encoding}</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

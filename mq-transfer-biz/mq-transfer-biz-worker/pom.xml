@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+      <groupId>com.gm.mqtransfer</groupId>
+      <artifactId>mq-transfer-bom</artifactId>
+      <version>1.0.0</version>
+      <relativePath>../../mq-transfer-bom</relativePath>
+   </parent>
+	
+	<artifactId>mq-transfer-biz-worker</artifactId>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<!-- <scope>test</scope> -->
+		</dependency>
+		<dependency>
+            <groupId>org.apache.helix</groupId>
+            <artifactId>helix-core</artifactId>
+        </dependency>
+        <dependency>
+		    <groupId>org.apache.zookeeper</groupId>
+		    <artifactId>zookeeper</artifactId>
+		</dependency>
+        
+		<dependency>
+		    <groupId>org.apache.curator</groupId>
+		    <artifactId>curator-recipes</artifactId>
+		</dependency>
+
+		<!--ark spring boot starter-->
+		<dependency>
+			<groupId>com.alipay.sofa</groupId>
+			<artifactId>sofa-ark-springboot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+      				<artifactId>logback-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+      				<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- <dependency>
+		    <groupId>com.alipay.sofa</groupId>
+		    <artifactId>runtime-sofa-boot-plugin</artifactId>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>com.gm.mqtransfer</groupId>
+			<artifactId>mq-transfer-provider-facade</artifactId>
+			<classifier>ark-plugin</classifier>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gm.mqtransfer</groupId>
+			<artifactId>mq-transfer-provider-kafka-082</artifactId>
+			<classifier>ark-plugin</classifier>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gm.mqtransfer</groupId>
+			<artifactId>mq-transfer-provider-kafka-230</artifactId>
+			<classifier>ark-plugin</classifier>
+			<version>1.0.0</version>
+		</dependency> -->
+		<dependency>
+			<groupId>com.gm.mqtransfer</groupId>
+			<artifactId>mq-transfer-biz-module</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gm.mqtransfer</groupId>
+			<artifactId>mq-transfer-biz-facade</artifactId>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+			<plugin>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                	<attach>true</attach>
+                    <webContextPath>/worker</webContextPath>
+                    <skipArkExecutable>true</skipArkExecutable>
+                    <outputDirectory>./target</outputDirectory>
+                    <declaredMode>true</declaredMode>
+                    <packExcludesConfig>rules.txt</packExcludesConfig>
+                </configuration>
+            </plugin>
+            <!-- <plugin>
+		      <groupId>org.springframework.boot</groupId>
+		      <artifactId>spring-boot-maven-plugin</artifactId>
+		      <version>2.6.6</version>
+		      
+		      <configuration>
+		        <outputDirectory>target</outputDirectory>
+		        <classifier>ark-biz</classifier>
+		        <webContextPath>worker</webContextPath>
+		      </configuration>
+		      <executions>
+		        <execution>
+		          <id>package</id>
+		          <goals>
+		            <goal>repackage</goal>
+		          </goals>
+		        </execution>
+		      </executions>
+		    </plugin> -->
+		</plugins>
+	</build>
+</project>
