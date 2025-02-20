@@ -27,8 +27,6 @@ public class TransferBootstrapApplication {
 	private static final Logger logger = LoggerFactory.getLogger(TransferBootstrapApplication.class);
 	
 	public static void main(String[] args) {
-//		logger.info("starting core ... ...");
-//        SpringApplication.run(TransferBootstrapApplication.class, args);
         ConfigurableApplicationContext context = SpringApplication.run(TransferBootstrapApplication.class, args);
         logger.info("TransferBootstrapApplication start!");
         logger.info("Spring Boot Version: " + SpringApplication.class.getPackage().getImplementationVersion());

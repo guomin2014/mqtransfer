@@ -37,13 +37,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alipay.sofa.ark.spi.service.ArkInject;
+import com.gm.mqtransfer.facade.config.ClusterConfig;
 import com.gm.mqtransfer.facade.exception.BusinessException;
 import com.gm.mqtransfer.facade.model.TaskShardingConfig;
 import com.gm.mqtransfer.facade.model.TransferPartitionConfig;
 import com.gm.mqtransfer.facade.model.TransferTask;
 import com.gm.mqtransfer.facade.service.IApplicationStartedService;
 import com.gm.mqtransfer.facade.service.plugin.PluginProviderManagerService;
-import com.gm.mqtransfer.manager.config.ClusterConfig;
 import com.gm.mqtransfer.manager.config.TomcatConfig;
 import com.gm.mqtransfer.provider.facade.util.NetUtils;
 
@@ -71,8 +71,6 @@ public class HelixMirrorMakerManager implements IApplicationStartedService{
 	
 	@Autowired
 	private TomcatConfig tomcatConfig;
-	@Autowired
-	private ClusterConfig config;
 //	@Autowired
 	@ArkInject
 	private PluginProviderManagerService pluginProviderManagerService;
@@ -101,10 +99,6 @@ public class HelixMirrorMakerManager implements IApplicationStartedService{
 		helixManager.disconnect();
 	}
 
-	public ClusterConfig getConfig() {
-		return config;
-	}
-	
 	private String generateClusterName() {
 		return HELIX_CLUSTER_NAME;
 	}
@@ -179,6 +173,7 @@ public class HelixMirrorMakerManager implements IApplicationStartedService{
 		if (this.helixManager != null && this.helixManager.isConnected()) {//集群已经初始化，直接返回
 			return helixManager;
 		}
+		ClusterConfig config = ClusterConfig.getInstance();
 		String zkUrl = config.getZkUrl();
 		int slashIndex = zkUrl.indexOf("/");
 		if (slashIndex < 0) {

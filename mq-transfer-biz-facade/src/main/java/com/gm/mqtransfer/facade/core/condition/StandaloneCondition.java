@@ -1,4 +1,4 @@
-package com.gm.mqtransfer.facade.config;
+package com.gm.mqtransfer.facade.core.condition;
 
 public class StandaloneCondition extends ModeCondition{
 

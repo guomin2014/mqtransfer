@@ -1,5 +1,11 @@
 spring:
   application:
     name: mq-transfer-biz-worker
-  profiles:
-    active: dev
+transfer:
+  common:
+    messageQueueMemoryRatio: 0.6
+    messageQueueMemoryRatioForSingle: 0.6
+    messageConsumerThreadPoolRatio: 0
+    messageProducerThreadPoolRatio: 0
+  consumer:
+    maxSuspendTimeForConsumer: 20000

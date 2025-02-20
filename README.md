@@ -41,26 +41,21 @@ The recommended version for Zookeeper is 3.6.4
 
 #### For macOS and Linux users, execute following commands:
 
-**1) Config zookeeper url**
+**1) Build**
+```shell
+mvn clean install -Dmaven.test.skip=true -Prelease-all
+```
 
-open file mq-biz/mq-transfer-biz-manager/src/main/resources/application-dev.yml 
+**2) Config zookeeper url**
 
-and mq-biz/mq-transfer-biz-worker/src/main/resources/application-dev.yml
+open file mq-transfer-biz-bootstrap/target/mq-transfer-biz-bootstrap/bin/mqtransfer.properties
 
 modify zookeeper url
 
 ```shell
-transfer:
-  cluster:
-    zkUrl: 127.0.0.1:2181    ##zookeeper url
-  module:
-    storage:
-      zkUrl: 127.0.0.1:2181  ##zookeeper url
-```
-
-**2) Build**
-```shell
-mvn clean install -Dmaven.test.skip=true -Prelease-all
+transfer.cluster.zkUrl=127.0.0.1:2181	##zookeeper url
+transfer.data.storage.type=zookeeper
+transfer.data.storage.zkUrl=127.0.0.1:2181  ##data storage zookeeper url
 ```
 
 **3) Start transfer bootstrap**

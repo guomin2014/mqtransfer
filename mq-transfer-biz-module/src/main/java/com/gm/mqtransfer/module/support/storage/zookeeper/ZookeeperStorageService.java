@@ -28,27 +28,23 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.gm.mqtransfer.facade.common.util.DataUtil;
+import com.gm.mqtransfer.facade.config.StorageConfig;
 import com.gm.mqtransfer.facade.exception.BusinessException;
 import com.gm.mqtransfer.facade.model.StorageConfigScope;
 import com.gm.mqtransfer.facade.model.StorageConfigScope.ConfigScopeProperty;
 import com.gm.mqtransfer.facade.model.StorageConfigScopeBuilder;
 import com.gm.mqtransfer.facade.service.IApplicationService;
-import com.gm.mqtransfer.module.config.StorageConfig;
 import com.gm.mqtransfer.module.support.storage.StorageService;
 import com.gm.mqtransfer.module.support.storage.listener.StorageChangeEvent;
 import com.gm.mqtransfer.module.support.storage.listener.StorageChildDataChangeListener;
 
-@Component
 public class ZookeeperStorageService implements StorageService, IApplicationService {
 
 	private final Logger logger = LoggerFactory.getLogger(ZookeeperStorageService.class);
 
-	@Autowired
-	private StorageConfig clusterConfig;
+	private StorageConfig storageConfig;
 	
 	private CuratorFramework client;
 	
@@ -66,22 +62,26 @@ public class ZookeeperStorageService implements StorageService, IApplicationServ
 	
 	private ExecutorService watcherExecutorService;
 	
+	public ZookeeperStorageService(StorageConfig storageConfig) {
+		this.storageConfig = storageConfig;
+	}
+	
 	public void start() {
-		logger.info("Trying to start storage service!");
+		logger.info("Trying to start zookeeper storage service!");
 		watcherExecutorService = new ThreadPoolExecutor(0, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 		initClientThread = new Thread() {
 			private AtomicInteger loadTimes = new AtomicInteger(0);
 			@Override
 			public void run() {
 				while(!hasStopInitClient) {
-					logger.info("start async init storage client...");
+					logger.info("start async init zookeeper storage client...");
 					try {
 						ZookeeperStorageService.this.init();
 						hasStopInitClient = true;
 						loadTimes.set(0);
-						logger.info("Compelet init storage client!");
+						logger.info("Compelet init zookeeper storage client!");
 					} catch (Exception e) {
-						logger.error("async init storage client error", e);
+						logger.error("async init zookeeper storage client error", e);
 						int times = loadTimes.incrementAndGet();
 						if (times <= 0) {
 							loadTimes.set(1);
@@ -93,14 +93,14 @@ public class ZookeeperStorageService implements StorageService, IApplicationServ
 						} catch (Exception ex) {}
 					}
 				}
-				logger.info("stop async init storage client.");
+				logger.info("stop async init zookeeper storage client.");
 			}
 			
 		};
 		initClientThread.start();
 	}
 	public void stop() {
-		logger.info("Trying to stop storage service!");
+		logger.info("Trying to stop zookeeper storage service!");
 		try {
 			//停止初始化client
 			hasStopInitClient = true;
@@ -118,18 +118,18 @@ public class ZookeeperStorageService implements StorageService, IApplicationServ
 	}
 	
 	private void init() {
-		RetryPolicy retryPolicy = new ExponentialBackoffRetry(clusterConfig.getMaxSleepIntervalTimeMs(), clusterConfig.getMaxRetries(), clusterConfig.getMaxSleepMs());
+		RetryPolicy retryPolicy = new ExponentialBackoffRetry(storageConfig.getMaxSleepIntervalTimeMs(), storageConfig.getMaxRetries(), storageConfig.getMaxSleepMs());
 		client = CuratorFrameworkFactory.builder()
-				.connectString(clusterConfig.getZkUrl())
-				.sessionTimeoutMs(clusterConfig.getSessionTimeoutMs())
-				.connectionTimeoutMs(clusterConfig.getConnectionTimeoutMs())
+				.connectString(storageConfig.getZkUrl())
+				.sessionTimeoutMs(storageConfig.getSessionTimeoutMs())
+				.connectionTimeoutMs(storageConfig.getConnectionTimeoutMs())
 				.retryPolicy(retryPolicy)
 				.build();
 		client.getConnectionStateListenable().addListener(new ConnectionStateListener() {
             @Override
             public void stateChanged(CuratorFramework client, ConnectionState newState) {
                 if (newState == ConnectionState.CONNECTED) {
-                	logger.info("storage client create connection success.-->zk:{}", clusterConfig.getZkUrl());
+                	logger.info("storage client create connection success.-->zk:{}", storageConfig.getZkUrl());
                     // 连接成功建立时的逻辑
                 	initNodes();
                 } else if (newState == ConnectionState.LOST) {

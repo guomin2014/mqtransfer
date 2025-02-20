@@ -39,8 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gm.mqtransfer.facade.common.TaskMessageType;
+import com.gm.mqtransfer.facade.config.ClusterConfig;
 import com.gm.mqtransfer.facade.exception.BusinessException;
-import com.gm.mqtransfer.manager.config.ClusterConfig;
 
 
 public class HelixBalanceManager {
@@ -54,7 +54,7 @@ public class HelixBalanceManager {
 	private final String EMPYT_INSTANCE_NAME = "";
 	private ScheduledExecutorService delayedScheuler;
 	private HelixManager helixManager;
-	private ClusterConfig config;
+	private ClusterConfig clusterConfig;
 	private String clusterName;
 	private String instanceName;
 	private boolean rebalanceRunning = false;
@@ -66,12 +66,12 @@ public class HelixBalanceManager {
 	/** 存活worker实例队列 */
 	private PriorityQueue<InstanceResourceHolder> workerInstanceQueue;
 	
-	public HelixBalanceManager(ClusterConfig config, HelixManager helixManager) {
-		this.config = config;
+	public HelixBalanceManager(ClusterConfig clusterConfig, HelixManager helixManager) {
+		this.clusterConfig = clusterConfig;
 		this.helixManager = helixManager;
 		this.clusterName = helixManager.getClusterName();
 		this.instanceName = helixManager.getInstanceName();
-		String rebalanceStrategyName = config.getAutoRebalanceStrategy();
+		String rebalanceStrategyName = clusterConfig.getAutoRebalanceStrategy();
 		RebalanceStrategyType rebalanceStrategy = RebalanceStrategyType.getByName(rebalanceStrategyName);
 		if (rebalanceStrategy == null) {
 			rebalanceStrategy = RebalanceStrategyType.AssignPriority;
@@ -98,8 +98,8 @@ public class HelixBalanceManager {
 	}
 	
 	public void rebalance() {
-		int delayedAutoReblanceTimeInSeconds = this.config.getAutoRebalanceDelayInSeconds();
-		boolean autoRebalanceEnable = this.config.isAutoRebalanceEnable();
+		int delayedAutoReblanceTimeInSeconds = this.clusterConfig.getAutoRebalanceDelayInSeconds();
+		boolean autoRebalanceEnable = this.clusterConfig.isAutoRebalanceEnable();
 		if (!autoRebalanceEnable) {
 			logger.info("[{}] [{}] automatic rebalancing is not enabled, skip it.", clusterName, instanceName);
 			return;
@@ -196,7 +196,7 @@ public class HelixBalanceManager {
 			}
 		}
 		
-		String rebalanceStrategyName = this.config.getAutoRebalanceStrategy();
+		String rebalanceStrategyName = this.clusterConfig.getAutoRebalanceStrategy();
 		RebalanceStrategyType rebalanceStrategy = RebalanceStrategyType.getByName(rebalanceStrategyName);
 		if (rebalanceStrategy == null) {
 			rebalanceStrategy = RebalanceStrategyType.AssignPriority;
@@ -288,7 +288,7 @@ public class HelixBalanceManager {
 		long startTime = System.currentTimeMillis();
 		try {
 			rebalanceRunning = true;
-			boolean autoRebalanceEnable = this.config.isAutoRebalanceEnable();
+			boolean autoRebalanceEnable = this.clusterConfig.isAutoRebalanceEnable();
 			if (!autoRebalanceEnable) {
 				logger.info("[{}] [{}] automatic rebalancing is not enabled, skip it.", clusterName, instanceName);
 				return;
@@ -471,7 +471,7 @@ public class HelixBalanceManager {
 				instanceResourceMap.put(originalInstanceName, holder);
 			}
 		}
-		String rebalanceStrategyName = this.config.getAutoRebalanceStrategy();
+		String rebalanceStrategyName = this.clusterConfig.getAutoRebalanceStrategy();
 		RebalanceStrategyType rebalanceStrategy = RebalanceStrategyType.getByName(rebalanceStrategyName);
 		if (rebalanceStrategy == null) {
 			rebalanceStrategy = RebalanceStrategyType.AssignPriority;

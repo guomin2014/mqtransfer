@@ -1,4 +1,4 @@
-package com.gm.mqtransfer.facade.config;
+package com.gm.mqtransfer.facade.core.condition;
 
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;

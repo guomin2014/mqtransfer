@@ -11,6 +11,7 @@ public interface StorageService {
 	void start();
 	
 	void stop();
+	
 	void addListener(StorageConfigScope scope, StorageChildDataChangeListener listener);
 	/**
 	 * 获取子节点列表

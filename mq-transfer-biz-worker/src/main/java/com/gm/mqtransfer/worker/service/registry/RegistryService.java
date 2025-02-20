@@ -24,11 +24,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
+import com.gm.mqtransfer.facade.config.ClusterConfig;
 import com.gm.mqtransfer.facade.service.IApplicationStartedService;
 import com.gm.mqtransfer.facade.service.plugin.PluginProviderManagerService;
 import com.gm.mqtransfer.provider.facade.common.Constants;
 import com.gm.mqtransfer.provider.facade.model.ServiceDesc;
-import com.gm.mqtransfer.worker.config.ClusterConfig;
 import com.gm.mqtransfer.worker.service.task.ResourceService;
 import com.gm.mqtransfer.worker.service.task.cluster.helix.CustomMessageHandlerFactory;
 import com.gm.mqtransfer.worker.service.task.cluster.helix.HelixWorkerOnlineOfflineStateModelFactory;
@@ -38,8 +38,6 @@ public class RegistryService implements IApplicationStartedService{
 
 	private final Logger logger = LoggerFactory.getLogger(RegistryService.class);
 	
-	@Autowired
-	private ClusterConfig clusterConfig;
 	@Autowired
 	private ResourceService resourceService;
 	@Autowired
@@ -64,6 +62,7 @@ public class RegistryService implements IApplicationStartedService{
 	public void start() {
 		try {
 			logger.info("starting connect helix cluster...");
+			ClusterConfig clusterConfig = ClusterConfig.getInstance();
 			String helixZkUrl = clusterConfig.getZkUrl();
 			String instanceId = "W_" + Constants.DEF_INSTANCE_ID_VAL;
 			int slashIndex = helixZkUrl.indexOf("/");

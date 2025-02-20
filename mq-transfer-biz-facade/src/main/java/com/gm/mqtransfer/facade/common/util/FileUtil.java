@@ -83,6 +83,13 @@ public final class FileUtil {
         }
         return context.toString();
     }
+	public static InputStream getReadInputStream(String filename) throws Exception {
+		InputStream is = ClassLoader.getSystemResourceAsStream(filename);
+		if(is == null){
+			is = new FileInputStream(filename);
+		}
+		return is;
+	}
 	
 	/**
 	 * 将文本写入到文件中

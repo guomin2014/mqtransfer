@@ -3,4 +3,8 @@ spring:
     name: mq-transfer-biz-bootstrap
 cluster:
   mode: cluster         ##cluster,standalone
-#  zkUrl: 127.0.0.1:2181
+logging:
+  level:
+    root: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%logger{50}] - %msg%n'

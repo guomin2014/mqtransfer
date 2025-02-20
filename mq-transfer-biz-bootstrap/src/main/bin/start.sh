@@ -50,7 +50,7 @@ if [ ! -x "$JAVACMD" ] ; then
   exit $ERR_NO_JAVA
 fi
 
-JAVA_MAJOR_VERSION=$("$JAVA" -version 2>&1 | head -1 | cut -d'"' -f2 | sed 's/^1\.//' | cut -d'.' -f1)
+JAVA_MAJOR_VERSION=$("$JAVACMD" -version 2>&1 | head -1 | cut -d'"' -f2 | sed 's/^1\.//' | cut -d'.' -f1)
 
 JAVA_OPT="${JAVA_OPT} -server -Xms512M -Xmx512M -Xss256K"
 
