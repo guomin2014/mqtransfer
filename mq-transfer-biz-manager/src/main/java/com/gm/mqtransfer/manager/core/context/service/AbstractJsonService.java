@@ -9,7 +9,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -21,7 +20,6 @@ public class AbstractJsonService<T> {
 	
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Value("${transfer.data.path:./}")
 	private String storePath;
 	
 	private String storeFileName;
@@ -45,9 +43,9 @@ public class AbstractJsonService<T> {
 	}
 	
 	public List<T> loadData() {
+		storePath = storeConfig != null ? storeConfig.getPath() : "./";
 		storeFilePath = StringUtils.appendPathSeparator(storePath) + storeFileName;
 		logger.info("starting load data from json ==> {}", storeFilePath);
-		logger.info("starting load data from inner json ==> {}", storeConfig != null ? storeConfig.getPath() : "");
 		try {
 			FileUtil.mkdirs(storePath);
 			File file = new File(storeFilePath);
@@ -60,7 +58,7 @@ public class AbstractJsonService<T> {
 				if (content.endsWith(",")) {
 					content = content.substring(0, content.length() - 1);
 				}
-				List<T> list = JSON.parseArray(content, (Class<T>)entityType);//JSON.parseObject(content, new TypeReference<List<T>>() {});
+				List<T> list = JSON.parseArray(content, (Class<T>)entityType);
 				return list;
 			} else {
 				return new ArrayList<>();

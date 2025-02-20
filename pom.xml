@@ -6,7 +6,7 @@
     <artifactId>mq-transfer</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>MQtransfer ${project.version}</name>
+    <name>MQtransfer</name>
     <description>A porter of news From one mq to another mq.</description>
     <!--<url>https://github.com/mqtransfer/mq-transfer</url>-->
 		<!--
