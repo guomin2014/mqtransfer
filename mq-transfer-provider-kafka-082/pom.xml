@@ -1,21 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
-        <groupId>com.gm.mqtransfer</groupId>
-        <artifactId>mq-transfer-bom</artifactId>
-        <version>1.0.0</version>
-        <relativePath>../../mq-transfer-bom</relativePath>
-    </parent>
+      <groupId>com.gm.mqtransfer</groupId>
+	  <artifactId>mq-transfer</artifactId>
+	  <version>1.0.0</version>
+   </parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>mq-transfer-provider-kafka-230</artifactId>
-	<name>mq-transfer-provider-kafka-230</name>
-	<properties>
-		<kafka.version>2.3.0</kafka.version>
-	</properties>
+	<artifactId>mq-transfer-provider-kafka-082</artifactId>
+	<name>mq-transfer-provider-kafka-082</name>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka_2.12</artifactId>
-			<version>${kafka.version}</version>
+			<artifactId>kafka_2.10</artifactId>
+			<version>0.8.2.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>com.alipay.sofa</groupId>
@@ -44,26 +47,23 @@
 		        <configuration>
 		        	<!-- 配置信息 -->
 		        	<!-- ark plugin 入口类 -->
-		        	<activator>com.gm.mqtransfer.provider.kafka.v230.KafkaPluginActivator</activator>
+		        	<activator>com.gm.mqtransfer.provider.kafka.v082.KafkaPluginActivator</activator>
 		        	<imported>
 		        		<packages>com.gm.mqtransfer.facade.*</packages>
-		        		<resources>
-		        			<resource>logback.xml</resource>
-		        		</resources>
+		        		<resources>logback.xml</resources>
 		        	</imported>
 		        	<!-- configure exported class -->
                     <exported>
                         <!-- configure package-level exported class-->
-                        <!-- <packages>
-                            <package>com.gm.mqtransfer.provider.kafka.v230.common</package>
-                            <package>com.gm.mqtransfer.provider.kafka.v230.common.impl</package>
-                        </packages> -->
+                        <packages>
+                            <!-- <package>com.gm.mqtransfer.provider.kafka.v082.common</package> -->
+                        </packages>
 
                         <!-- configure class-level exported class -->
                         <classes>
-                            <class>com.gm.mqtransfer.provider.kafka.v230.service.Kafka230ProviderService</class>
-                            <class>com.gm.mqtransfer.provider.kafka.v230.service.consumer.Kafka230ConsumerService</class>
-                            <class>com.gm.mqtransfer.provider.kafka.v230.service.producer.Kafka230ProducerService</class>
+                            <class>com.gm.mqtransfer.provider.kafka.v082.service.Kafka082ProviderService</class>
+                            <class>com.gm.mqtransfer.provider.kafka.v082.service.consumer.Kafka082ConsumerService</class>
+                            <class>com.gm.mqtransfer.provider.kafka.v082.service.producer.Kafka082ProducerService.Kafka082ProducerService</class>
                         </classes>
                     </exported>
 		        	<!-- 指定打包的 ${pluginName}.ark.plugin 存放目录; 默认放在 ${project.build.directory} -->
@@ -81,9 +81,9 @@
                         <excludeArtifactId>sofa-ark-spi</excludeArtifactId>
                     </excludeArtifactIds>
                     <!--将指定的 Jar 包 shade 至 ark plugin-->
-                    <shades>
+                    <!-- <shades>
                         <shade>groupId:artifactId[:classifier]:version</shade>
-                    </shades>
+                    </shades> -->
 		        </configuration>
 			</plugin>
 		</plugins>

@@ -4,9 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
       <groupId>com.gm.mqtransfer</groupId>
-      <artifactId>mq-transfer-bom</artifactId>
-      <version>1.0.0</version>
-      <relativePath>../../mq-transfer-bom</relativePath>
+	  <artifactId>mq-transfer</artifactId>
+	  <version>1.0.0</version>
    </parent>
 	<artifactId>mq-transfer-biz-facade</artifactId>
 
