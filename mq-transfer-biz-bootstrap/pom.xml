@@ -70,32 +70,17 @@
                   </exclusion>
               </exclusions>
 		</dependency>
-		<!-- 静态合并部署 需要在启动参数中配置-Dsofa.ark.embed.static.biz.enable=true -->
-		<!-- 
-		<dependency>
-			<groupId>com.gm.mqtransfer</groupId>
-			<artifactId>mq-transfer-biz-manager</artifactId>
-			<classifier>ark-biz</classifier>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gm.mqtransfer</groupId>
-			<artifactId>mq-transfer-biz-worker</artifactId>
-			<classifier>ark-biz</classifier>
-			<version>1.0.0</version>
-		</dependency>
-		 -->
 	</dependencies>
 	
 	<profiles>
 		<profile>
 			<id>default</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 		</profile>
 		<profile>
 			<id>release-all</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<dependencies>
 				<dependency>
 					<groupId>com.gm.mqtransfer</groupId>

@@ -2,6 +2,9 @@
 
 
 PORT=$1
+if [ ! -n "$PORT" ]; then  
+	PORT=8080
+fi
 BASEDIR=`dirname $0`/..
 BASEDIR=`(cd "$BASEDIR"; pwd)`
 PROJECT_NAME="@project.artifactId@";
@@ -14,10 +17,6 @@ HEAP_DUMP_PATH=$LOG_PATH/$PORT"-heap_dump.hprof"
 TEMP_PATH=$LOG_PATH/temp/
 SUCCESS=0
 FAIL=9
-if [ ! -n "$PORT" ]; then  
-	echo $"Usage: $0 {port}"
-	exit $FAIL
-fi
 if [ ! -d $LOG_PATH ]; 
 then     
     mkdir -p $LOG_PATH; 
@@ -67,13 +66,10 @@ fi
 
 JAVA_OPTS="${JAVA_OPTS} -cp ${CLASSPATH}"
 
-EXTRA_JVM_ARGUMENTS=""
-
 # cd "$BASEDIR/lib";
 
 echo "starting application $PROJECT_NAME......"
 exec "$JAVACMD" $JAVA_OPTS \
-				$EXTRA_JVM_ARGUMENTS \
 				-Dapp.name="$PROJECT_NAME" \
 				-Dapp.port="$PORT" \
 				-Dbasedir="$BASEDIR" \

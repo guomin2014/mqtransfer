@@ -60,12 +60,12 @@ transfer:
 
 **2) Build**
 ```shell
-mvn clean package -Dmaven.test.skip=true -Prelease-all
+mvn clean install -Dmaven.test.skip=true -Prelease-all
 ```
 
 **3) Start transfer bootstrap**
 ```shell
-sh mq-biz/mq-transfer-biz-bootstrap/target/mq-transfer-biz-bootstrap/bin/start.sh
+sh mq-transfer-biz-bootstrap/target/mq-transfer-biz-bootstrap/bin/start.sh
 ```
 
 **4) visit web**
@@ -81,10 +81,11 @@ then: create mq transfer task;
 
 ### IDEA Run MQTransfer
 
-1. Add VM arguments: -Dsofa.ark.embed.enable=true -Dsofa.ark.embed.static.biz.enable=true -Dcom.alipay.sofa.ark.master.biz=mq-transfer-manager
-2. If plugins are introduced in IDEA, please close them first(mq-provider-facade、mq-provider-kafka-082、mq-provider-kafka-230)
-3. If mq-transfer-biz-manager and mq-transfer-biz-worker are introduced in IDEA, please close them first
-4. find TransferBootstrapApplication in mq-transfer-biz-bootstrap, run it
+1. Add VM arguments: -Dsofa.ark.embed.enable=true -Dsofa.ark.embed.static.biz.enable=true -Dcom.alipay.sofa.ark.master.biz=mq-transfer-biz-bootstrap
+2. If plugins are introduced in Eclipse, please close them first(mq-provider-facade、mq-provider-kafka-082、mq-provider-kafka-230)
+3. If mq-transfer-biz-manager and mq-transfer-biz-worker are introduced in Eclipse, please close them first
+4. maven build mq-transfer
+5. find TransferBootstrapApplication in mq-transfer-biz-bootstrap, run it
 
 
 ----------

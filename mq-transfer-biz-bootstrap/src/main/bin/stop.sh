@@ -2,15 +2,13 @@
 
 
 PORT=$1
+if [ ! -n "$PORT" ]; then  
+	PORT=8080
+fi
 BASEDIR=`dirname $0`/..
 BASEDIR=`(cd "$BASEDIR"; pwd)`
 PROJECT_NAME="@project.artifactId@"
-MAIN_CLASS="$PROJECT_NAME";
-
-if [ ! -n "$PORT" ]; then  
-	echo $"Usage: $0 {port}"
-	exit $FAIL
-fi
+MAIN_CLASS="com.gm.mqtransfer.bootstrap.TransferBootstrapApplication";
 
 echo "stoping application $PROJECT_NAME......"
 
