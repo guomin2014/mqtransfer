@@ -74,12 +74,10 @@
 		<dependency>
 			<groupId>com.gm.mqtransfer</groupId>
 			<artifactId>mq-transfer-biz-module</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.gm.mqtransfer</groupId>
 			<artifactId>mq-transfer-biz-facade</artifactId>
-			<version>1.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -109,7 +107,55 @@
                     <skipArkExecutable>true</skipArkExecutable>
                     <outputDirectory>./target</outputDirectory>
                     <declaredMode>true</declaredMode>
-                    <packExcludesConfig>rules.txt</packExcludesConfig>
+                    <excludeGroupIds>
+                    	<excludeGroupId>commons-lang</excludeGroupId>
+                    	<excludeGroupId>commons-cli</excludeGroupId>
+                    	<excludeGroupId>commons-io</excludeGroupId>
+                    	<excludeGroupId>commons-codec</excludeGroupId>
+                    	<excludeGroupId>commons-logging</excludeGroupId>
+                    	<excludeGroupId>org.apache.commons</excludeGroupId>
+                    	<excludeGroupId>org.apache.helix</excludeGroupId>
+                    	<excludeGroupId>org.apache.zookeeper</excludeGroupId>
+                    	<excludeGroupId>org.apache.yetus</excludeGroupId>
+                    	<excludeGroupId>org.apache.curator</excludeGroupId>
+                    	<excludeGroupId>org.apache.logging*</excludeGroupId>
+                    	<excludeGroupId>org.apache.maven</excludeGroupId>
+                    	<excludeGroupId>org.apache.httpcomponents</excludeGroupId>
+                    	<excludeGroupId>org.apache.tomcat*</excludeGroupId>
+                    	<excludeGroupId>com.alipay.sofa*</excludeGroupId>
+                    	<excludeGroupId>org.ow2.asm</excludeGroupId>
+                    	<excludeGroupId>org.hamcrest</excludeGroupId>
+                    	<excludeGroupId>org.skyscreamer</excludeGroupId>
+                    	<excludeGroupId>org.reactivestreams</excludeGroupId>
+                    	<excludeGroupId>org.xerial.snappy</excludeGroupId>
+                    	<excludeGroupId>org.xmlunit</excludeGroupId>
+                    	<excludeGroupId>org.springframework*</excludeGroupId>
+                    	<excludeGroupId>org.slf4j*</excludeGroupId>
+                    	<excludeGroupId>org.yaml*</excludeGroupId>
+                    	<excludeGroupId>org.codehaus.plexus</excludeGroupId>
+                    	<excludeGroupId>com.fasterxml.jackson*</excludeGroupId>
+                    	<excludeGroupId>io.netty*</excludeGroupId>
+                    	<excludeGroupId>io.zipkin*</excludeGroupId>
+                    	<excludeGroupId>io.projectreactor*</excludeGroupId>
+                    	<excludeGroupId>ch.qos.logback</excludeGroupId>
+                    	<excludeGroupId>jakarta.annotation*</excludeGroupId>
+                    	<excludeGroupId>jakarta.xml.bind*</excludeGroupId>
+                    	<excludeGroupId>jakarta.activation*</excludeGroupId>
+                    	<excludeGroupId>com.jayway.jsonpath*</excludeGroupId>
+                    	<excludeGroupId>com.google.guava*</excludeGroupId>
+                    	<excludeGroupId>com.google.inject*</excludeGroupId>
+                    	<excludeGroupId>com.gm.mqtransfer</excludeGroupId>
+                    	<excludeGroupId>net.minidev*</excludeGroupId>
+                    	<excludeGroupId>javax.xml*</excludeGroupId>
+                    	<excludeGroupId>javax.annotation*</excludeGroupId>
+                    </excludeGroupIds>
+                    <excludeArtifactIds>
+                    	<excludeArtifactId>activation</excludeArtifactId>
+                    	<excludeArtifactId>aopalliance</excludeArtifactId>
+                    	<excludeArtifactId>javax.inject</excludeArtifactId>
+                    	<excludeArtifactId>android-json</excludeArtifactId>
+                    	<excludeArtifactId>metrics-core</excludeArtifactId>
+                    </excludeArtifactIds>
                 </configuration>
             </plugin>
             <!-- <plugin>
