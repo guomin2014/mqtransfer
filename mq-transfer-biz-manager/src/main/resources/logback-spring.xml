@@ -2,7 +2,7 @@
 <configuration  scan="true" scanPeriod="10 seconds">
 	<springProperty scope="context" name="springApplicationName" source="spring.application.name" defaultValue="mq-transfer-container" />
     <property name="LOG_HOME" value="/export/logs" />
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%logger{50}:%L] - %msg%n" />
+    <property name="LOG_PATTERN" value="[%-37black(${springApplicationName})] %d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%logger{50}:%L] - %msg%n" />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
