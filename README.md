@@ -76,7 +76,8 @@ then: create mq transfer task;
 
 ### IDEA Run MQTransfer
 
-1. Add VM arguments: -Dsofa.ark.embed.enable=true -Dsofa.ark.embed.static.biz.enable=true -Dcom.alipay.sofa.ark.master.biz=mq-transfer-biz-bootstrap
+1. Add VM arguments: 
+-Dsofa.ark.embed.enable=true -Dsofa.ark.embed.static.biz.enable=true -Dcom.alipay.sofa.ark.master.biz=mq-transfer-biz-bootstrap -Dlogback.ContextSelector=com.alipay.sofa.ark.common.adapter.ArkLogbackContextSelector
 2. If plugins are introduced in Eclipse, please close them first(mq-provider-facade、mq-provider-kafka-082、mq-provider-kafka-230)
 3. If mq-transfer-biz-manager and mq-transfer-biz-worker are introduced in Eclipse, please close them first
 4. maven build mq-transfer

@@ -77,6 +77,7 @@ exec "$JAVACMD" $JAVA_OPTS \
 				-Dsofa.ark.embed.enable=true \
 				-Dsofa.ark.embed.static.biz.enable=true \
 				-Dcom.alipay.sofa.ark.master.biz="$PROJECT_NAME" \
+				-Dlogback.ContextSelector=com.alipay.sofa.ark.common.adapter.ArkLogbackContextSelector \
 				$MAIN_CLASS \
 				--server.port="$PORT" \
 				&
